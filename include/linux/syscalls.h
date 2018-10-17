@@ -1282,4 +1282,9 @@ static inline long ksys_truncate(const char __user *pathname, loff_t length)
 	return do_sys_truncate(pathname, length);
 }
 
+asmlinkage long sys_hello_world(const char __user *str,
+                                const size_t str_len,
+                                char __user *buf,
+                                size_t buf_len);
+
 #endif
