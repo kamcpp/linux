@@ -343,7 +343,6 @@
 332	common	statx			__x64_sys_statx
 333	common	io_pgetevents		__x64_sys_io_pgetevents
 334	common	rseq			__x64_sys_rseq
-999	64	hello_world		sys_hello_world
 
 #
 # x32-specific system call numbers start at 512 to avoid cache impact
@@ -387,3 +386,4 @@
 545	x32	execveat		__x32_compat_sys_execveat/ptregs
 546	x32	preadv2			__x32_compat_sys_preadv64v2
 547	x32	pwritev2		__x32_compat_sys_pwritev64v2
+999	64	hello_world		sys_hello_world
