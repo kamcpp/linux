@@ -415,8 +415,7 @@
 #define __NR_copy_file_range	391
 #define __NR_preadv2		392
 #define __NR_pwritev2		393
-#define __NR_hello_world        999
 
-#define NR_syscalls 395
+#define NR_syscalls 394
 
 #endif /* __ASM_SH_UNISTD_64_H */

@@ -1,47 +1,46 @@
-#include <linux/kernel.h>  // For printk
-#include <linux/string.h>  // For strcpy, strcat, strlen
-#include <linux/slab.h>    // For kmalloc, kfree
-#include <linux/uaccess.h> // For copy_from_user, copy_to_user
+#include <linux/kernel.h>   // For printk
+#include <linux/string.h>   // For strcpy, strcat, strlen
+#include <linux/slab.h>     // For kmalloc, kfree
+#include <linux/uaccess.h>  // For copy_from_user, copy_to_user
+#include <linux/syscalls.h> // For SYSCALL_DEFINE4
 
-asmlinkage long sys_hello_world(const char __user *str,
-                                const size_t str_len,
+SYSCALL_DEFINE4(hello_world, 
+		const char __user *, str, 
+		const unsigned int, str_len, 
+		char __user *, buf, 
+		unsigned int, buf_len) { 
+/*asmlinkage long sys_hello_world(const char __user *str,
+                                const int str_len,
                                 char __user *buf,
-                                size_t buf_len) {
-  void* name = NULL;
-  void* message = NULL;
+                                int buf_len) {*/
+  char name[64];
+  char message[96];
 
-  name = kmalloc((str_len + 1) * sizeof(char), GFP_KERNEL);
-  if (!name) {
-    printk("Memory allocation failed.\n");
+  printk("System call fired! %d.\n", str_len);
+  if (str_len >= 64) {
+    printk("Too long input string.\n");
     return -1;
   }
+
   if (copy_from_user(name, str, str_len)) {
     printk("Copy from user space failed.\n");
-    kfree(name);
     return -2;
   }
-  message = kmalloc((16 + str_len + 1) * sizeof(char), GFP_KERNEL);;
-  if (!message) {
-    printk("Memory allocation failed.\n");
-    kfree(name);
-    return -1;
-  }
-  strcpy(message, "Hello World ");
+
+  strcpy(message, "Hello ");
   strcat(message, name);
-  if (strlen(message) >= buf_len) {
-    printk("Small user space buffer.\n");
-    kfree(name);
-    kfree(message);
+  strcat(message, "!");
+
+  if (strlen(message) >= (buf_len - 1)) {
+    printk("Too small output buffer.\n");
     return -3;
   }
+
   if (copy_to_user(buf, message, strlen(message) + 1)) {
     printk("Copy to user space failed.\n");
-    kfree(name);
-    kfree(message);
     return -4;
   }
-  printk("Written message: %s\n", (char*)message);
-  kfree(name);
-  kfree(message);
+
+  printk("Message: %s\n", message);
   return 0;
 }
