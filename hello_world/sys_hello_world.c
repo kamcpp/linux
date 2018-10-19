@@ -17,7 +17,7 @@ SYSCALL_DEFINE4(hello_world,
   // output message.
   char message[96];
 
-  printk("System call fired! %d.\n", str_len);
+  printk("System call fired!\n");
   if (str_len >= 64) {
     printk("Too long input string.\n");
     return -1;
